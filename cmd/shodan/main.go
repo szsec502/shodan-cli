@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/seaung/shodan-cli/pkg/lib"
@@ -12,8 +13,32 @@ func main() {
 
 	shodan := shodan.New(os.Getenv("SHODAN_API_KEY"))
 
-	if options.Domain != "" {
-		shodan.DomainInfo(options.Domain)
+	if !options.Info {
+		apiInfo, err := shodan.APIInfo()
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		fmt.Println(apiInfo)
 	}
 
+	if options.Domain != "" {
+		domain, err := shodan.DomainInfo(options.Domain)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		fmt.Println(domain)
+	}
+
+	if options.Host != "" {
+		host, err := shodan.HostSearch(options.Host)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		fmt.Println(host)
+	}
 }
